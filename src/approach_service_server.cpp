@@ -125,9 +125,7 @@ private:
 
   void publish_cart_frame_transform() {
 
-    if (ready) {
-
-      geometry_msgs::msg::TransformStamped transformStamped;
+        geometry_msgs::msg::TransformStamped transformStamped;
       geometry_msgs::msg::Twist cmd_vel_msg;
 
       try {
@@ -159,6 +157,8 @@ private:
       transform_stamped.transform.rotation.z = cart_quat_.z();
       transform_stamped.transform.rotation.w = cart_quat_.w();
       broadcaster->sendTransform(transform_stamped);
+
+    if (ready) {
 
       tf2::Vector3 direction_to_target = transformed_coords.normalized();
       float tfDistance = sqrt(pow(xDistance, 2) +
