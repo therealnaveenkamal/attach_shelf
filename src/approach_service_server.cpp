@@ -77,6 +77,7 @@ private:
       const std::shared_ptr<attach_shelf::srv::GoToLoading::Request> request,
       std::shared_ptr<attach_shelf::srv::GoToLoading::Response> response) {
 
+    RCLCPP_INFO(this->get_logger(), "------%d", globalLegPos.size());
     if (globalLegPos.size() != 2) {
       response->complete = false;
     }
@@ -123,7 +124,7 @@ private:
     }
   }
 
-  void publish_cart_frame_transform() {
+   void publish_cart_frame_transform() {
 
         geometry_msgs::msg::TransformStamped transformStamped;
       geometry_msgs::msg::Twist cmd_vel_msg;
@@ -179,34 +180,9 @@ private:
         move_extra = true;
       }
 
-      /*
-      if (std::abs(direction_to_target.x()) > 0.1) {
-          RCLCPP_INFO(this->get_logger(), "x: %f, y: %f",
-      direction_to_target.x(), direction_to_target.y());
-          // Calculate the direction to the target
-          // Set the linear velocity to move towards the target
-          cmd_vel_msg.linear.x = 0.2 * direction_to_target.x();
-          cmd_vel_msg.linear.y = 0.0 * direction_to_target.y();
-          cmd_vel_msg.angular.z = 0.0;
-          cmd_vel_publisher_->publish(cmd_vel_msg);
-      } else if (std::abs(direction_to_target.y()) > 0.1) {
-
-          cmd_vel_msg.linear.x = 0.0 * direction_to_target.x();
-          cmd_vel_msg.linear.y = 0.2 * direction_to_target.y();
-          cmd_vel_msg.angular.z = 0.0;
-          cmd_vel_publisher_->publish(cmd_vel_msg);
-      } else {
-          cmd_vel_msg.linear.x = 0.0;
-          cmd_vel_msg.linear.y = 0.0;
-          cmd_vel_msg.angular.z = 0.0;
-          cmd_vel_publisher_->publish(cmd_vel_msg);
-
-          ready = false;
-          //move_extra = true;
-      }
-      */
     }
   }
+
 
   void scan_callback(const sensor_msgs::msg::LaserScan::SharedPtr msg) {
 
@@ -260,6 +236,9 @@ private:
       RCLCPP_INFO(this->get_logger(), "%d, %d, (%f, %f)", legPositions[0],
                   legPositions[1], xDistance, yDistance);
 
+      publish_cart_frame_transform();
+    } else {
+      RCLCPP_INFO(this->get_logger(), "TWO LEGS NOT FOUND");
       publish_cart_frame_transform();
     }
   }

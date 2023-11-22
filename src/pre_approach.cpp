@@ -16,7 +16,7 @@ public:
 
     auto param_desc1 = rcl_interfaces::msg::ParameterDescriptor{};
     param_desc1.description = "Sets the degrees";
-    this->declare_parameter<std::double_t>("degrees", 0.0, param_desc1);
+    this->declare_parameter<int>("degrees", 0, param_desc1);
 
     scan_subscription_ = this->create_subscription<sensor_msgs::msg::LaserScan>(
         "/scan", 10,
@@ -47,7 +47,7 @@ private:
         cmd_vel_msg.linear.x = 0.0;
         is_rotating_ = true;
       } else {
-        cmd_vel_msg.linear.x = 0.2;
+        cmd_vel_msg.linear.x = 0.5;
         cmd_vel_msg.angular.z = 0.0;
       }
     }
@@ -63,7 +63,7 @@ private:
       initial_yaw_ = current_yaw_;
 
       if (std::abs(current_yaw_ - target_yaw_) > 0.05) {
-        cmd_vel_msg.angular.z = 0.2;
+        cmd_vel_msg.angular.z = -0.2;
         cmd_vel_msg.linear.x = 0.0;
         is_rotating_ = true;
       } else {
@@ -89,7 +89,7 @@ private:
       scan_subscription_;
   rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr cmd_vel_publisher_;
   std::double_t obs;
-  std::double_t deg;
+  int deg;
 
   rclcpp::Subscription<nav_msgs::msg::Odometry>::SharedPtr odom_subscription_;
 
